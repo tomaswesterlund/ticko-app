@@ -1,0 +1,53 @@
+﻿@page "/tickets"
+
+@inject TicketService _ticketService
+
+
+<h3>Tickets</h3>
+@if (_tickets == null)
+{
+    <p>Retrieving tickets ...</p>
+}
+else if (_tickets.Count == 0)
+{
+    <p>There doesn't seem to be any tickets in the system ...</p>
+}
+else
+{
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Created</th>
+            <th scope="col">Assigned to</th>
+            <th scope="col">Reported by</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ticket in _tickets)
+        {
+        <tr>
+            <th scope="row">@ticket.Id</th>
+            <td>@ticket.Title</td>
+            <td>@ticket.Created</td>
+            <td>
+                <a href="/user/@ticket.AssignedTo.Id">@ticket.AssignedTo.Name</a>
+            </td>
+            <td>
+                <a href="/user/@ticket.ReportedBy.Id">@ticket.ReportedBy.Name</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+
+@code {
+    private List<Ticket> _tickets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tickets = _ticketService.GetAllOrderedByPriority();
+    }
+}

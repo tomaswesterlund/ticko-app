@@ -1,0 +1,26 @@
+﻿@page "/user/{Id:int}"
+
+@inject UserService _userService
+
+<h3>User</h3>
+@if (_user == null)
+{
+    <p>Retrieveing user ...</p>
+}
+else 
+{ 
+    <h2>Name: @_user.Name</h2>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private User _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = _userService.GetById(Id);
+    }
+
+}
